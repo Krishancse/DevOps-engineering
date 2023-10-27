@@ -1,0 +1,62 @@
+def add(x, y):
+    return x + y
+
+def subtract(x, y):
+    return x - y
+
+
+
+import unittest
+import main
+
+class TestMain(unittest.TestCase):
+
+    def test_add(self):
+        self.assertEqual(main.add(3, 4), 7)
+
+    def test_subtract(self):
+        self.assertEqual(main.subtract(4, 2), 2)
+
+
+if __name__ == '__main__':
+    unittest.main()
+
+
+
+
+name: Python CI/CD
+
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run Tests
+      run: |
+        python -m unittest test_main.py
+
+    - name: Deployment
+      # Add your deployment steps here
+      # Example: deploying to a cloud platform or a server
