@@ -1,0 +1,40 @@
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+import static org.junit.Assert.assertEquals;
+
+public class SeleniumTest {
+
+    private WebDriver driver;
+
+    @Before
+    public void setUp() {
+        // Set up the Chrome driver
+        System.setProperty("webdriver.chrome.driver", "/path/to/chromedriver");
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless"); // Run Chrome in headless mode
+        driver = new ChromeDriver(options);
+    }
+
+    @Test
+    public void testGoogleSearch() {
+        // Open Google
+        driver.get("https://www.google.com");
+        // Find the search box and enter "Hello, world!"
+        driver.findElementByName("q").sendKeys("Hello, world!");
+        // Click the Google search button
+        driver.findElementByName("btnK").click();
+        // Verify the page title
+        assertEquals("Hello, world! - Google Search", driver.getTitle());
+    }
+
+    @After
+    public void tearDown() {
+        // Close the browser
+        driver.quit();
+    }
+}
