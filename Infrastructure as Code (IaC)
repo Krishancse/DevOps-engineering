@@ -1,0 +1,35 @@
+import software.amazon.awscdk.core.*;
+import software.amazon.awscdk.services.ec2.*;
+
+public class MyStack extends Stack {
+
+    public MyStack(final Construct scope, final String id) {
+        super(scope, id);
+
+        Vpc vpc = Vpc.Builder.create(this, "MyVpc")
+                .maxAzs(3) // Availability zones
+                .subnetConfiguration(List.of(
+                        SubnetConfiguration.builder()
+                                .name("PublicSubnet")
+                                .subnetType(SubnetType.PUBLIC)
+                                .build(),
+                        SubnetConfiguration.builder()
+                                .name("PrivateSubnet")
+                                .subnetType(SubnetType.PRIVATE)
+                                .build()
+                ))
+                .build();
+
+        // Create an EC2 instance
+        Instance instance = Instance.Builder.create(this, "MyInstance")
+                .instanceType(InstanceType.of(InstanceClass.BURSTABLE2, InstanceSize.MICRO))
+                .vpc(vpc)
+                .build();
+    }
+
+    public static void main(final String[] args) {
+        App app = new App();
+        new MyStack(app, "MyStack");
+        app.synth();
+    }
+}
